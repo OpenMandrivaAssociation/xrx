@@ -1,6 +1,16 @@
-Name: xrx
-Version: 1.0.1
-Release: %mkrel 4
+%define name	xrx
+%define version	1.0.1
+%define release	%mkrel 5
+
+%define major		0
+%define libname		%mklibname %name %major
+%define libname_nest	%mklibname %{name}nest %major
+%define develname	%mklibname %name -d
+%define staticname	%mklibname %name -d -s
+
+Name: %{name}
+Version: %{version}
+Release: %{release}
 Summary: RX helper program 
 Group: Development/X11
 Source: http://xorg.freedesktop.org/releases/individual/app/%{name}-%{version}.tar.bz2
@@ -22,73 +32,70 @@ in the RX MIME type format and start remote applications.
 %files
 %defattr(-,root,root)
 %{_bindir}/xrx
-%{_mandir}/man1/xrx.1x.bz2
+%{_mandir}/man1/xrx.1*
 
 #------------------------------------------------------------------------------
 
-%define lib_name_xrx %mklibname xrx 0
-
-%package -n %lib_name_xrx
+%package -n %libname
 Group: Development/X11
 Summary: Core xrx library
 
-%post -n %lib_name_xrx -p /sbin/ldconfig
-%postun -n %lib_name_xrx -p /sbin/ldconfig
+%post -n %libname -p /sbin/ldconfig
+%postun -n %libname -p /sbin/ldconfig
 
-%description -n %lib_name_xrx
-Core xrx library
+%description -n %libname
+Core xrx library.
 
-%files -n %lib_name_xrx
+%files -n %libname
 %defattr(-,root,root,-)
-%{_libdir}/libxrx.so.*
-%{_mandir}/man1/libxrx.1x.bz2
+%{_libdir}/libxrx.so.%{major}*
+%{_mandir}/man1/libxrx.1*
 
 #------------------------------------------------------------------------------
 
-%define lib_name_xrxnest %mklibname xrxnest 0
-
-%package -n %lib_name_xrxnest
+%package -n %libname_nest
 Group: Development/X11
 Summary: Core xrx library
 
-%description -n %lib_name_xrxnest
-Core xrx library
+%description -n %libname_nest
+Core xrx library.
 
-%post -n %lib_name_xrxnest -p /sbin/ldconfig
-%postun -n %lib_name_xrxnest -p /sbin/ldconfig
+%post -n %libname_nest -p /sbin/ldconfig
+%postun -n %libname_nest -p /sbin/ldconfig
 
-%files -n %lib_name_xrxnest
+%files -n %libname_nest
 %defattr(-,root,root,-)
-%{_libdir}/libxrxnest.so.*
+%{_libdir}/libxrxnest.so.%{major}*
 
 #------------------------------------------------------------------------------
 
-%package devel
+%package -n %develname
 Group: Development/X11
 Summary: Development package for xrx
-Requires: %lib_name_xrx = %version-%release
-Requires: %lib_name_xrxnest = %version-%release
+Requires: %libname = %version-%release
+Requires: %libname_nest = %version-%release
 
 Requires: %{name} >= %{version}
+Obsoletes: xrx-devel
 
-%description devel
-Core xrx library
+%description -n %develname
+Core xrx library development headers.
 
-%files devel
+%files -n %develname
 %defattr(-,root,root,-)
 %{_libdir}/*.so
 %{_libdir}/*.la
 
 #------------------------------------------------------------------------------
 
-%package static-devel
+%package -n %staticname
 Group: Development/X11
-Summary: Development package for xrx
+Summary: Static development package for xrx
 
-%description static-devel
-Core xrx library
+%description -n %staticname
+Core xrx library static development headers.
 
-%files static-devel
+%files -n %staticname
 %defattr(-,root,root,-)
 %{_libdir}/*.a
 
@@ -105,11 +112,7 @@ Core xrx library
 
 %install
 rm -rf %{buildroot}
-make DESTDIR=%buildroot install
+%makeinstall_std
 
 %clean
 rm -rf %buildroot
-
-
-
-
