@@ -1,6 +1,6 @@
 %define name	xrx
 %define version	1.0.1
-%define release	%mkrel 6
+%define release	%mkrel 7
 
 %define major		0
 %define libname		%mklibname %name %major
@@ -77,6 +77,7 @@ Requires: %libname_nest = %version-%release
 
 Requires: %{name} >= %{version}
 Obsoletes: xrx-devel
+Provides: %{name}-devel
 
 %description -n %develname
 Core xrx library development headers.
@@ -91,6 +92,8 @@ Core xrx library development headers.
 %package -n %staticname
 Group: Development/X11
 Summary: Static development package for xrx
+Obsoletes: xrx-static-devel
+Provides: %{name}-static-devel
 
 %description -n %staticname
 Core xrx library static development headers.
