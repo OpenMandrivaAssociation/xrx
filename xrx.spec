@@ -9,7 +9,7 @@
 %define staticname	%mklibname %name -d -s
 
 Name: %{name}
-Version: %{vernsion}
+Version: %{version}
 Release: %{release}
 Summary: RX helper program 
 Group: Development/X11
