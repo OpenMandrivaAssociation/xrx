@@ -24,6 +24,8 @@ BuildRequires: libxt-devel >= 1.0.0
 BuildRequires: libxaw-devel >= 1.0.1
 BuildRequires: x11-util-macros >= 1.0.1
 BuildRequires: x11-xtrans-devel >= 1.0.0
+# for npapi.h
+BuildRequires: mozilla-firefox-devel
 
 %description
 The xrx helper program may be used with any Web browser to interpret documents
