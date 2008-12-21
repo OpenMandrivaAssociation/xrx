@@ -1,118 +1,36 @@
-%define name		xrx
-%define version		1.0.2
-%define release		%mkrel 2
-
-%define major		0
-%define libname		%mklibname %name %major
-%define libname_nest	%mklibname %{name}nest %major
-%define develname	%mklibname %name -d
-%define staticname	%mklibname %name -d -s
-
-Name: %{name}
-Version: %{version}
-Release: %{release}
-Summary: RX helper program 
-Group: Development/X11
-Source: http://xorg.freedesktop.org/releases/individual/app/%{name}-%{version}.tar.bz2
-License: MIT
-BuildRoot: %{_tmppath}/%{name}-root
-
-BuildRequires: libx11-devel >= 1.0.0
-BuildRequires: libxau-devel >= 1.0.0
-BuildRequires: libxext-devel >= 1.0.0
-BuildRequires: libxt-devel >= 1.0.0
-BuildRequires: libxaw-devel >= 1.0.1
-BuildRequires: x11-util-macros >= 1.0.1
-BuildRequires: x11-xtrans-devel >= 1.0.0
+Name:		xrx
+Version:	1.0.2
+Release:	%{mkrel 1}
+Summary:	RX helper program 
+Group:		Development/X11
+Source0:	http://xorg.freedesktop.org/releases/individual/app/%{name}-%{version}.tar.bz2
+License:	MIT
+BuildRoot:	%{_tmppath}/%{name}-root
+BuildRequires:	libx11-devel >= 1.0.0
+BuildRequires:	libxau-devel >= 1.0.0
+BuildRequires:	libxext-devel >= 1.0.0
+BuildRequires:	libxt-devel >= 1.0.0
+BuildRequires:	libxaw-devel >= 1.0.1
+BuildRequires:	x11-util-macros >= 1.0.1
+BuildRequires:	x11-xtrans-devel >= 1.0.0
 # for npapi.h
-BuildRequires: mozilla-firefox-devel
+BuildRequires:	xulrunner-devel
 
 %description
 The xrx helper program may be used with any Web browser to interpret documents
 in the RX MIME type format and start remote applications.
 
-%files
-%defattr(-,root,root)
-%{_bindir}/xrx
-%{_mandir}/man1/xrx.1*
+%package plugin
+Group:		Development/X11
+Summary:	RX browser plugins
+Obsoletes:	%{mklibname xrx 0} < %{version}-%{release}
+Obsoletes:	%{mklibname xrxnest 0} < %{version}-%{release}
+Obsoletes:	%{mklibname xrx -d} < %{version}-%{release}
+Obsoletes:	%{mklibname xrx -d -s} < %{version}-%{release}
 
-#------------------------------------------------------------------------------
-
-%package -n %libname
-Group: Development/X11
-Summary: Core xrx library
-
-%if %mdkversion < 200900
-%post -n %libname -p /sbin/ldconfig
-%endif
-%if %mdkversion < 200900
-%postun -n %libname -p /sbin/ldconfig
-%endif
-
-%description -n %libname
-Core xrx library.
-
-%files -n %libname
-%defattr(-,root,root,-)
-%{_libdir}/libxrx.so.%{major}*
-%{_mandir}/man1/libxrx.1*
-
-#------------------------------------------------------------------------------
-
-%package -n %libname_nest
-Group: Development/X11
-Summary: Core xrx library
-
-%description -n %libname_nest
-Core xrx library.
-
-%if %mdkversion < 200900
-%post -n %libname_nest -p /sbin/ldconfig
-%endif
-%if %mdkversion < 200900
-%postun -n %libname_nest -p /sbin/ldconfig
-%endif
-
-%files -n %libname_nest
-%defattr(-,root,root,-)
-%{_libdir}/libxrxnest.so.%{major}*
-
-#------------------------------------------------------------------------------
-
-%package -n %develname
-Group: Development/X11
-Summary: Development package for xrx
-Requires: %libname = %version-%release
-Requires: %libname_nest = %version-%release
-
-Requires: %{name} >= %{version}
-Obsoletes: xrx-devel
-Provides: %{name}-devel
-
-%description -n %develname
-Core xrx library development headers.
-
-%files -n %develname
-%defattr(-,root,root,-)
-%{_libdir}/*.so
-%{_libdir}/*.la
-
-#------------------------------------------------------------------------------
-
-%package -n %staticname
-Group: Development/X11
-Summary: Static development package for xrx
-Obsoletes: xrx-static-devel
-Provides: %{name}-static-devel
-
-%description -n %staticname
-Core xrx library static development headers.
-
-%files -n %staticname
-%defattr(-,root,root,-)
-%{_libdir}/*.a
-
-#------------------------------------------------------------------------------
+%description plugin
+Mozilla-type browser plugins to allow the handling of documents in the
+RX MIME type format to start remote applications.
 
 %prep
 %setup -q -n %{name}-%{version}
@@ -127,5 +45,20 @@ Core xrx library static development headers.
 rm -rf %{buildroot}
 %makeinstall_std
 
+mkdir -p %{buildroot}%{_libdir}/mozilla/plugins
+mv %{buildroot}%{_libdir}/*.so %{buildroot}%{_libdir}/mozilla/plugins
+rm -f %{buildroot}%{_libdir}/*.*a
+
 %clean
-rm -rf %buildroot
+rm -rf %{buildroot}
+
+%files
+%defattr(-,root,root)
+%{_bindir}/xrx
+%{_mandir}/man1/xrx.1*
+
+%files plugin
+%defattr(-,root,root,-)
+%{_libdir}/mozilla/plugins/*.so
+%{_mandir}/man1/libxrx.1*
+
