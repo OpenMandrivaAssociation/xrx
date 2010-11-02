@@ -1,5 +1,5 @@
 Name:		xrx
-Version:	1.0.3
+Version:	1.0.4
 Release:	%{mkrel 1}
 Summary:	RX helper program 
 Group:		Development/X11
