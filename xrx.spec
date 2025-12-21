@@ -6,6 +6,11 @@ Group:		Development/X11
 Source0:	http://xorg.freedesktop.org/releases/individual/app/%{name}-%{version}.tar.bz2
 License:	MIT
 BuildRoot:	%{_tmppath}/%{name}-root
+BuildRequires:	autoconf
+BuildRequires:	automake
+BuildRequires:	libtool-base
+BuildRequires:	slibtool
+BuildRequires:	make
 BuildRequires:	libx11-devel >= 1.0.0
 BuildRequires:	libxau-devel >= 1.0.0
 BuildRequires:	libxext-devel >= 1.0.0
